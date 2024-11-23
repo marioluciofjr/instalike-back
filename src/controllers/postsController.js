@@ -57,24 +57,33 @@ export async function uploadImagem(req, res) {
 };
 
 export async function atualizarNovoPost(req, res) {
+    // Obtém o ID do post a partir dos parâmetros da requisição
     const id = req.params.id; 
+    // Define a URL da imagem baseada no ID do post
     const urlImagem = `http://localhost:3000/${id}.png`;
      
     try {
+        // Lê o arquivo de imagem a partir da pasta 'uploads' usando o ID do post
         const imgBuffer = fs.readFileSync(`uploads/${id}.png`);
+        // Gera uma descrição para a imagem utilizando uma função assíncrona
         const descricao = await gerarDescricaoComGemini(imgBuffer)
 
+        // Cria um objeto representando o post atualizado com os dados processados
         const post = {
-            imgUrl: urlImagem,
-            descricao: descricao,
-            alt: req.body.alt
+            imgUrl: urlImagem, // URL da imagem no servidor
+            descricao: descricao, // Descrição gerada automaticamente
+            alt: req.body.alt // Texto alternativo fornecido no corpo da requisição
         }  
 
+        // Atualiza o post no banco de dados (ou em outro local) com base no ID
         const postCriado = await atualizarPost(id, post);
-                
+
+        // Retorna uma resposta de sucesso com o post atualizado em formato JSON
         res.status(200).json(postCriado);
     } catch(erro) {
+        // Em caso de erro, registra a mensagem no console
         console.error(erro.message);
+        // Envia uma resposta de erro com status 500 e uma mensagem genérica
         res.status(500).json({"Erro": "Deu merda na requisição"});
     }
 };
