@@ -38,6 +38,7 @@ const routes = (app) => {
     // Rota para fazer upload de imagens
     app.post("/upload", upload.single("imagem"), uploadImagem);  // Rota POST para fazer upload de uma imagem. O middleware `upload.single("imagem")` é responsável por processar o arquivo antes de chamar a função `uploadImagem` do controller.
 
+    // Rota para atualizar novo post no banco de dados
     app.put("/upload/:id", atualizarNovoPost)
 };
 
